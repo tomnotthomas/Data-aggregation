@@ -36,6 +36,19 @@ async function main() {
         leastCrowdedCount: { $last: '$numberOfTheaters' },
       },
     },
+    {
+      $project: {
+        _id: 0,
+        mostCrowdedState: {
+          name: '$mostCrowdedState',
+          count: '$mostCrowdedCount',
+        },
+        leastCrowdedState: {
+          name: '$leastCrowdedState',
+          count: '$leastCrowdedCount',
+        },
+      },
+    },
   ])
 
   console.log(res)
