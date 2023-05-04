@@ -51,12 +51,41 @@ async function main() {
     },
   ])
 */
-  const movies = await Movie.aggregate([
+  /*const movies = await Movie.aggregate([
     { $group: { _id: { $isoDayOfWeek: '$released' }, count: { $sum: 1 }, avgRating: { $avg: '$imdb.rating' } } },
     { $sort: { avgRating: -1 } },
   ])
+*/
 
-  console.log(movies)
+  const topMovies = await Movie.aggregate([
+    /*   { $unwind: '$genres' },
+    { $group: { _id: { genre: '$genres', title: '$title' }, rating: { $avg: '$imdb.rating' } } },
+    { $sort: { '_id.genre': 1, rating: -1 } },
+    {
+      $group: {
+        _id: '$_id.genre',
+        movies: { $push: { title: '$_id.title', rating: '$rating' } },
+      },
+    },
+    { $project: { topThreeMovies: { $slice: ['$movies', 3] } } },
+  ])
+
+  console.log(JSON.stringify(topMovies, null, 2))
+}*/
+
+    { $unwind: '$genres' },
+    { $group: { _id: { genre: '$genres' }, rating: { $avg: '$imdb.rating' } } },
+
+    {
+      $group: {
+        _id: '$_id.genre',
+        avgRating: { $avg: '$rating' },
+      },
+    },
+    { $sort: { avgRating: -1 } },
+    { $limit: 1 },
+  ])
+  console.log(topMovies)
 }
 
 main()
