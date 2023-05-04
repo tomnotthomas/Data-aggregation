@@ -17,7 +17,7 @@ async function main() {
   //  { $limit: 30 },
   //])
 
-  const res = await Theater.aggregate([
+  /*const theaters = await Theater.aggregate([
     {
       $group: {
         _id: '$location.address.state',
@@ -50,8 +50,13 @@ async function main() {
       },
     },
   ])
+*/
+  const movies = await Movie.aggregate([
+    { $group: { _id: { $isoDayOfWeek: '$released' }, count: { $sum: 1 }, avgRating: { $avg: '$imdb.rating' } } },
+    { $sort: { avgRating: -1 } },
+  ])
 
-  console.log(res)
+  console.log(movies)
 }
 
 main()
