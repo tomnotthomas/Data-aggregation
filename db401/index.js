@@ -18,9 +18,24 @@ async function main() {
   //])
 
   const res = await Theater.aggregate([
-    //  { $group: { _id: '$location.address.state', theaters: { $push: '$theaterId' }, numberOfTheaters: { $sum: 1 } } },
-    // { $sort: { numberOfTheaters: -1 } },
-    { $sortByCount: '$location.address.state' },
+    {
+      $group: {
+        _id: '$location.address.state',
+        theaters: { $push: '$theaterId' },
+        numberOfTheaters: { $sum: 1 },
+      },
+    },
+    { $set: { state: '$_id' } },
+    { $sort: { numberOfTheaters: -1 } },
+    {
+      $group: {
+        _id: 1,
+        mostCrowdedState: { $first: '$state' },
+        mostCrowdedCount: { $first: '$numberOfTheaters' },
+        leastCrowdedState: { $last: '$state' },
+        leastCrowdedCount: { $last: '$numberOfTheaters' },
+      },
+    },
   ])
 
   console.log(res)
