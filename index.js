@@ -23,8 +23,6 @@ async function firstQuestion() {
   console.log('QUESTION1:', JSON.stringify(topMovies, null, 2))
 }
 
-firstQuestion()
-
 //QUESTION2:what's the best genre based on average rating for the movies in that genre?
 async function secondQuestion() {
   await firstQuestion()
