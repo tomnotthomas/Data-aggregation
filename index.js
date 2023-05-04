@@ -25,7 +25,6 @@ async function firstQuestion() {
 
 //QUESTION2:what's the best genre based on average rating for the movies in that genre?
 async function secondQuestion() {
-  await firstQuestion()
   const topGenre = await Movie.aggregate([
     { $unwind: '$genres' },
     { $group: { _id: { genre: '$genres' }, rating: { $avg: '$imdb.rating' } } },
@@ -41,4 +40,9 @@ async function secondQuestion() {
   ])
   console.log('QUESTION2:', topGenre)
 }
-secondQuestion()
+async function runQuestions() {
+  await firstQuestion()
+  await secondQuestion()
+}
+
+runQuestions()
